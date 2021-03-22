@@ -12,16 +12,17 @@ type HTTPRequest interface{
 }
 
 func NewRetryableRequest(client *retryablehttp.Client, log *log.Logger) *RetryableRequest{
+	client.Logger = log
 	return &RetryableRequest{client: client,log: log}
 }
 
 type RetryableRequest struct{
-	client *retryablehttp.Client
+	client RetryableClient
 	log *log.Logger
 }
 
 func  (r *RetryableRequest) Call( req *retryablehttp.Request) (*http.Response,error){
-	r.client.Logger = r.log
+	r.log.Print("[INFO] Starting the request")
 	response, err := r.client.Do(req)
 
 	if err != nil {
