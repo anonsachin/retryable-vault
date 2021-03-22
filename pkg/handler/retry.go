@@ -2,7 +2,6 @@ package handler
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -69,7 +68,7 @@ func (ret *Retry) MakeKV(w http.ResponseWriter, r *http.Request){
 		http.Error(w,msg,http.StatusBadRequest)
 		return
 	}
-	b, err := json.Marshal(input)
+	b, err := input.ToBytes()
 
 	if err != nil{
 		msg := fmt.Sprintf("Unable to get marshal vault data: %v",err)

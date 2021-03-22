@@ -20,6 +20,10 @@ func (k *KV) ToJSON(w io.Writer) error{
 	return e.Encode(k)
 }
 
+func (k *KV) ToBytes() ([]byte,error){
+	return json.Marshal(k)
+}
+
 func (k *KV) FromJSON(r io.Reader) error{
 	d := json.NewDecoder(r)
 	return d.Decode(k)
