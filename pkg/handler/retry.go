@@ -18,15 +18,14 @@ const kv = "http://127.0.0.1:8200/v1/sys/mounts/store"
 
 type Retry struct{
 	log *log.Logger
-	client *retryablehttp.Client
+	client send.HTTPRequest
 }
 
-func NewRetry(log *log.Logger, client *retryablehttp.Client) *Retry{
+func NewRetry(log *log.Logger, client send.HTTPRequest) *Retry{
 	return &Retry{log: log,client: client}
 }
 
 func (ret *Retry) Get(w http.ResponseWriter, r *http.Request){
-	ret.client.Logger = ret.log
 	req, err := retryablehttp.NewRequest(http.MethodGet,vault,nil)
 
 	if err !=nil{
@@ -38,7 +37,7 @@ func (ret *Retry) Get(w http.ResponseWriter, r *http.Request){
 
 	req.WithContext(r.Context())
 	req.Header.Add("X-Vault-Token",token)
-	resp, err := send.Call(ret.client,req)
+	resp, err := ret.client.Call(req)
 
 	if err != nil{
 		message := fmt.Sprintf("[ERROR] Unable to make request : %s",err.Error())
@@ -91,7 +90,7 @@ func (ret *Retry) MakeKV(w http.ResponseWriter, r *http.Request){
 	req.Header.Set("Content-Type", "application/json")
 	req.WithContext(r.Context())
 
-	resp, err := send.Call(ret.client,req)
+	resp, err := ret.client.Call(req)
 
 	if err != nil{
 		message := fmt.Sprintf("[ERROR] Unable to make request : %s",err.Error())
