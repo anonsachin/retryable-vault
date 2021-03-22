@@ -18,6 +18,7 @@ func main() {
 	h := handler.NewRetry(l,client)
 
     r.HandleFunc("/vault", h.Get).Methods(http.MethodGet)
+	r.HandleFunc("/vault",h.MakeKV).Methods(http.MethodPost)
 
 	l.Println("[INFO] Starting server at :8080")
 
