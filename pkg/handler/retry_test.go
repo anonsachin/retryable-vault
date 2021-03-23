@@ -1,4 +1,4 @@
-// +build unittest
+// +build unit_test
 
 package handler
 
