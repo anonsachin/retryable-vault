@@ -4,9 +4,11 @@ package send
 
 import (
 	"fmt"
-	"net/http"
-	"testing"
+	"log"
 	"main/pkg/mocks"
+	"net/http"
+	"os"
+	"testing"
 
 	"github.com/hashicorp/go-retryablehttp"
 )
@@ -46,13 +48,17 @@ func TestCall (t *testing.T){
 		t.Run(tc.Name,func(t *testing.T){
 			mock := &mocks.RetryableClientMock{}
 			mock.DoFunc = tc.MockFunc
+			r := &RetryableRequest{
+				log: log.New(os.Stdout,"-- unittest --",log.LstdFlags),
+				client: mock,
+			}
 			if tc.err{
-				_, err := mock.Do(&retryablehttp.Request{})
+				_, err := r.Call(&retryablehttp.Request{})
 				if err == nil{
 					t.Fatalf("Excected err but got nil")
 				}
 			} else {
-				resp, err := mock.Do(&retryablehttp.Request{})
+				resp, err := r.Call(&retryablehttp.Request{})
 				if err != nil {
 					t.Fatalf("Excected nil but got err : %v",err)
 				}

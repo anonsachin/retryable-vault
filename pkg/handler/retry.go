@@ -39,7 +39,7 @@ func (ret *Retry) Get(w http.ResponseWriter, r *http.Request){
 	resp, err := ret.client.Call(req)
 
 	if err != nil{
-		message := fmt.Sprintf("[ERROR] Unable to make request : %s",err.Error())
+		message := fmt.Sprintf("[ERROR] Unable to make request :%s",err.Error())
 		ret.log.Println(message)
 		http.Error(w,message,http.StatusBadGateway)
 		return
@@ -49,7 +49,7 @@ func (ret *Retry) Get(w http.ResponseWriter, r *http.Request){
 	_, err = io.Copy(w,resp.Body)
 
 	if err != nil{
-		message := fmt.Sprintf("[ERROR] Unable to write request : %s",err.Error())
+		message := fmt.Sprintf("[ERROR] Unable to write request :%s",err.Error())
 		ret.log.Println(message)
 		http.Error(w,message,http.StatusBadGateway)
 		return
